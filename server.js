@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 
 // Configuration from environment variables
+const APP_HOST = process.env.APP_HOST || '0.0.0.0';
 const APP_POOL = process.env.APP_POOL || 'unknown';
 const APP_PORT = process.env.APP_PORT || 3000;
 const RELEASE_ID = process.env.RELEASE_ID || 'unknown';
@@ -17,6 +18,7 @@ app.use(express.json());
 
 // Middleware to add custom headers to all responses
 app.use((req, res, next) => {
+  res.setHeader('X-App-Pool', APP_POOL);
   res.setHeader('X-App-Pool', APP_POOL);
   res.setHeader('X-Release-Id', RELEASE_ID);
   next();
@@ -138,16 +140,17 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-const server = app.listen(APP_PORT, '0.0.0.0', () => {
+const server = app.listen(APP_PORT, APP_HOST, () => {
   console.log(`
 ╔═════════════════════════════════════════════╗
 ║  Blue/Green Deployment Service              ║
 ║  Pool: ${APP_POOL.padEnd(36)} ║
 ║  Release ID: ${RELEASE_ID.padEnd(30)} ║
+║  Host: ${APP_HOST.padEnd(36)} ║
 ║  Port: ${String(APP_PORT).padEnd(36)} ║
 ╚═════════════════════════════════════════════╝
   `);
-  console.log(`Server running on http://0.0.0.0:${APP_PORT}`);
+  console.log(`Server running on http://${APP_HOST}:${APP_PORT}`);
   console.log(`Ready to accept requests...\n`);
 });
 

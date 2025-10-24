@@ -93,7 +93,8 @@ Root endpoint with API documentation.
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `PORT` | Server port | 3000 |
+| `APP_PORT` | Server port | 3000 |
+| `APP_HOST` | Server bind address | 0.0.0.0 |
 | `APP_POOL` | Pool identifier (blue/green) | unknown |
 | `RELEASE_ID` | Release identifier | unknown |
 
@@ -123,8 +124,11 @@ For manual builds, see [BUILD.md](BUILD.md).
 # Install dependencies
 npm install
 
-# Run the application
-PORT=3000 APP_POOL=blue RELEASE_ID=v1-0-0-blue npm start
+# Run the application (Docker default - binds to all interfaces)
+APP_PORT=3000 APP_POOL=blue RELEASE_ID=v1-0-0-blue npm start
+
+# Or run locally on localhost only
+APP_PORT=3000 APP_HOST=127.0.0.1 APP_POOL=blue RELEASE_ID=v1-0-0-blue npm start
 ```
 
 ### With Docker
@@ -134,7 +138,7 @@ PORT=3000 APP_POOL=blue RELEASE_ID=v1-0-0-blue npm start
 docker run -d \
   --name app-blue \
   -p 8081:3000 \
-  -e PORT=3000 \
+  -e APP_PORT=3000 \
   -e APP_POOL=blue \
   -e RELEASE_ID=v1-0-0-blue \
   ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:blue
@@ -143,7 +147,7 @@ docker run -d \
 docker run -d \
   --name app-green \
   -p 8082:3000 \
-  -e PORT=3000 \
+  -e APP_PORT=3000 \
   -e APP_POOL=green \
   -e RELEASE_ID=v1-0-0-green \
   ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:green
@@ -362,7 +366,7 @@ When modifying the application:
 
 ## License
 
-MIT - Part of HNG13 DevOps Stage 2 project
+MIT
 
 ## Links
 

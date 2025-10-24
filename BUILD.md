@@ -56,13 +56,13 @@ Pull the images from GitHub Container Registry:
 
 ```bash
 # Pull Blue image
-docker pull ghcr.io/[owner]/[repo]:blue
+docker pull ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:blue
 
 # Pull Green image
-docker pull ghcr.io/[owner]/[repo]:green
+docker pull ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:green
 
 # Pull specific version
-docker pull ghcr.io/[owner]/[repo]:v1.0.0-blue
+docker pull ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:v1.0.0-blue
 ```
 
 For public repositories, no authentication is needed. For private repositories:
@@ -72,7 +72,7 @@ For public repositories, no authentication is needed. For private repositories:
 echo $GITHUB_TOKEN | docker login ghcr.io -u USERNAME --password-stdin
 
 # Then pull the image
-docker pull ghcr.io/[owner]/[repo]:blue
+docker pull ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:blue
 ```
 
 ## Manual Builds (Local Development)
@@ -81,13 +81,13 @@ docker pull ghcr.io/[owner]/[repo]:blue
 
 ```bash
 # Build Blue image
-docker build -t ghcr.io/[owner]/[repo]:blue \
+docker build -t ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:blue \
   --build-arg APP_POOL=blue \
   --build-arg RELEASE_ID=v1-0-0-blue \
   .
 
 # Build Green image
-docker build -t ghcr.io/[owner]/[repo]:green \
+docker build -t ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:green \
   --build-arg APP_POOL=green \
   --build-arg RELEASE_ID=v1-0-0-green \
   .
@@ -110,10 +110,10 @@ docker build -t blue-green-app:green .
 echo $GITHUB_TOKEN | docker login ghcr.io -u [username] --password-stdin
 
 # Push Blue image
-docker push ghcr.io/[owner]/[repo]:blue
+docker push ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:blue
 
 # Push Green image
-docker push ghcr.io/[owner]/[repo]:green
+docker push ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:green
 ```
 
 ## Build Arguments
@@ -147,7 +147,7 @@ The Dockerfile doesn't require build arguments by default, but you can pass them
 ### Health Check
 ```dockerfile
 HEALTHCHECK --interval=10s --timeout=3s --start-period=10s --retries=3 \
-  CMD wget --spider -q http://localhost:${PORT:-3000}/healthz || exit 1
+  CMD wget --spider -q http://localhost:${APP_PORT:-3000}/healthz || exit 1
 ```
 
 ## Image Size Optimization
@@ -199,11 +199,11 @@ git commit -m "Update application"
 git push origin main
 
 # 2. Wait for GitHub Actions to build images
-# View progress at: https://github.com/[owner]/[repo]/actions
+# View progress at: https://github.com/codelikesuraj/docker-nodejs-blue-green-service/actions
 
 # 3. Pull the built images
-docker pull ghcr.io/[owner]/[repo]:blue
-docker pull ghcr.io/[owner]/[repo]:green
+docker pull ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:blue
+docker pull ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:green
 
 # 4. Run with docker-compose
 docker-compose up -d
@@ -219,10 +219,10 @@ git tag v1.0.0
 git push origin v1.0.0
 
 # GitHub Actions will build and push:
-# - ghcr.io/[owner]/[repo]:v1.0.0-blue
-# - ghcr.io/[owner]/[repo]:v1.0.0-green
-# - ghcr.io/[owner]/[repo]:1.0-blue
-# - ghcr.io/[owner]/[repo]:1.0-green
+# - ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:v1.0.0-blue
+# - ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:v1.0.0-green
+# - ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:1.0-blue
+# - ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:1.0-green
 ```
 
 ## Security Considerations
@@ -238,7 +238,7 @@ git push origin v1.0.0
 After images are built and pushed:
 
 1. Use the images in your `docker-compose.yml` or deployment configuration
-2. Reference them in `.env` file: `BLUE_IMAGE=ghcr.io/[owner]/[repo]:blue`
+2. Reference them in `.env` file: `BLUE_IMAGE=ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:blue`
 3. Deploy using the pre-built images (no rebuild required)
 
 ## Support
