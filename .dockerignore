@@ -1,0 +1,44 @@
+# Git
+.git
+.gitignore
+.github
+
+# Documentation
+README.md
+*.md
+
+# Node modules (will be installed during build)
+node_modules
+npm-debug.log
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker files
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Nginx config (not needed in app image)
+nginx/
+
+# CI/CD
+.github/
+
+# Test files
+test/
+tests/
+*.test.js
+*.spec.js
+
+# Environment files
+.env
+.env.*
