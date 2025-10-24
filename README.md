@@ -54,12 +54,28 @@ Health check endpoint for container orchestration.
 }
 ```
 
-### POST /chaos/start?mode=error|timeout
+### POST /chaos/start
 
 Simulates service failures for testing failover.
 
-**Query Parameters:**
-- `mode`: `error` (returns 500) or `timeout` (hangs)
+**Mode can be specified via:**
+- Query parameter: `?mode=error` or `?mode=timeout`
+- JSON body: `{"mode": "error"}` or `{"mode": "timeout"}`
+
+**Mode Options:**
+- `error` - Returns HTTP 500 on all requests
+- `timeout` - Request hangs indefinitely
+
+**Examples:**
+```bash
+# Using query parameter
+curl -X POST http://localhost:8081/chaos/start?mode=error
+
+# Using JSON body
+curl -X POST http://localhost:8081/chaos/start \
+  -H "Content-Type: application/json" \
+  -d '{"mode": "timeout"}'
+```
 
 **Response:**
 ```json
@@ -174,8 +190,13 @@ curl http://localhost:8081/healthz
 ### Test Chaos Mode
 
 ```bash
-# Start chaos (error mode)
+# Start chaos (error mode) - using query parameter
 curl -X POST http://localhost:8081/chaos/start?mode=error
+
+# Or start chaos using JSON body
+curl -X POST http://localhost:8081/chaos/start \
+  -H "Content-Type: application/json" \
+  -d '{"mode": "error"}'
 
 # Verify service returns errors
 curl http://localhost:8081/version
@@ -216,8 +237,13 @@ This application is designed to be deployed in a Blue/Green configuration behind
 # 1. Check baseline (should be Blue)
 curl -i http://localhost:8080/version
 
-# 2. Trigger failure on Blue
+# 2. Trigger failure on Blue (using query parameter)
 curl -X POST http://localhost:8081/chaos/start?mode=error
+
+# Or trigger failure using JSON body
+curl -X POST http://localhost:8081/chaos/start \
+  -H "Content-Type: application/json" \
+  -d '{"mode": "error"}'
 
 # 3. Verify automatic failover to Green
 curl -i http://localhost:8080/version

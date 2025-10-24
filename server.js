@@ -19,7 +19,6 @@ app.use(express.json());
 // Middleware to add custom headers to all responses
 app.use((req, res, next) => {
   res.setHeader('X-App-Pool', APP_POOL);
-  res.setHeader('X-App-Pool', APP_POOL);
   res.setHeader('X-Release-Id', RELEASE_ID);
   next();
 });
@@ -69,7 +68,8 @@ app.get('/healthz', (req, res) => {
 
 // POST /chaos/start - Start chaos mode
 app.post('/chaos/start', (req, res) => {
-  const mode = req.query.mode || 'error';
+  // Accept mode from query parameter, JSON body, or default to 'error'
+  const mode = req.query.mode || req.body.mode || 'error';
 
   if (!['error', 'timeout'].includes(mode)) {
     return res.status(400).json({
@@ -115,7 +115,7 @@ app.get('/', (req, res) => {
     endpoints: {
       version: 'GET /version',
       health: 'GET /healthz',
-      chaosStart: 'POST /chaos/start?mode=error|timeout',
+      chaosStart: 'POST /chaos/start (mode via query param or JSON body)',
       chaosStop: 'POST /chaos/stop'
     }
   });
