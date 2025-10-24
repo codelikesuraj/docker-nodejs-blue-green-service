@@ -100,15 +100,19 @@ Root endpoint with API documentation.
 
 ## Docker Images
 
-Pre-built images are available on GitHub Container Registry:
+Pre-built multi-architecture images are available on GitHub Container Registry:
 
 ```bash
-# Pull Blue image
+# Pull Blue image (automatically selects correct architecture)
 docker pull ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:blue
 
-# Pull Green image
+# Pull Green image (automatically selects correct architecture)
 docker pull ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:green
 ```
+
+**Supported Architectures:**
+- `linux/amd64` - Intel/AMD 64-bit processors
+- `linux/arm64` - ARM 64-bit (Apple Silicon M1/M2, AWS Graviton, Raspberry Pi)
 
 ### Building Images
 
@@ -230,6 +234,7 @@ curl -i http://localhost:8080/version
 
 ### Base Image
 - Node.js 18 Alpine Linux
+- Multi-architecture support (amd64, arm64)
 - Minimal size (~150MB)
 - Security-hardened
 

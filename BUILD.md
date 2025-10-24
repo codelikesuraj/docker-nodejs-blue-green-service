@@ -14,6 +14,14 @@ The workflow runs on:
 - **Pull requests**: Builds images (without pushing)
 - **Manual trigger**: Via GitHub Actions UI
 
+### Multi-Architecture Support
+
+Images are built for multiple architectures:
+- **linux/amd64** - Intel/AMD 64-bit (most common)
+- **linux/arm64** - ARM 64-bit (Apple Silicon M1/M2, AWS Graviton, Raspberry Pi)
+
+Docker automatically pulls the correct architecture for your platform.
+
 ### Image Tags
 
 Each build creates multiple tags for both Blue and Green images:
@@ -80,16 +88,44 @@ docker pull ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:blue
 ### Build Both Images
 
 ```bash
-# Build Blue image
+# Build Blue image (single architecture)
 docker build -t ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:blue \
   --build-arg APP_POOL=blue \
   --build-arg RELEASE_ID=v1-0-0-blue \
   .
 
-# Build Green image
+# Build Green image (single architecture)
 docker build -t ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:green \
   --build-arg APP_POOL=green \
   --build-arg RELEASE_ID=v1-0-0-green \
+  .
+```
+
+### Build Multi-Architecture Images
+
+To build for multiple architectures locally, use buildx:
+
+```bash
+# Create and use a buildx builder
+docker buildx create --name multiarch --use
+docker buildx inspect --bootstrap
+
+# Build and push Blue image for multiple architectures
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -t ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:blue \
+  --build-arg APP_POOL=blue \
+  --build-arg RELEASE_ID=v1-0-0-blue \
+  --push \
+  .
+
+# Build and push Green image for multiple architectures
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -t ghcr.io/codelikesuraj/docker-nodejs-blue-green-service:green \
+  --build-arg APP_POOL=green \
+  --build-arg RELEASE_ID=v1-0-0-green \
+  --push \
   .
 ```
 

@@ -67,6 +67,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta-blue.outputs.tags }}
           labels: ${{ steps.meta-blue.outputs.labels }}
@@ -80,6 +81,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta-green.outputs.tags }}
           labels: ${{ steps.meta-green.outputs.labels }}
